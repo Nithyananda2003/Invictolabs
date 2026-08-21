@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.npm-cache/
+
+# Production output
+dist/
+production-dist*/
+docs/production-build-meta*.json
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*
