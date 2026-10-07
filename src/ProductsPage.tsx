@@ -1,26 +1,31 @@
-import { useEffect, useRef } from 'react'
+import { SiteLink } from './components/SiteLink'
+import { lazy, Suspense, useEffect, useRef } from 'react'
 import {
   ArrowRight,
   ArrowUpRight,
   Bot,
-  CheckCircle2,
   ClipboardCheck,
   FileInput,
   Gauge,
   Layers3,
   ReceiptText,
-  ScanLine,
-  ShieldCheck,
-  Sparkles,
   UsersRound,
   Workflow,
 } from 'lucide-react'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { DottedSurface } from './components/ui/DottedSurface'
 import { GridBoxBackground } from './components/ui/GridBoxBackground'
-import { MagicRings } from './components/ui/MagicRings'
+const LazyRings = lazy(() => import('./components/ui/MagicRings').then(module => ({ default: module.MagicRings })))
+function MagicRings(props: React.ComponentProps<typeof LazyRings>) {
+  return <Suspense fallback={null}><LazyRings {...props} /></Suspense>
+}
+import { ProductInsights } from './components/ProductInsights'
+import { ProductHeroVisual } from './components/ProductHeroVisual'
+import { TaxFlowExperience } from './components/TaxFlowExperience'
+import { TitleFlowGallery } from './components/TitleFlowGallery'
+import './products-stack.css'
+import TiltedCard from './components/ui/TiltedCard'
 
 const workflowStages = ['Order intake', 'Assignment', 'Production', 'Quality review', 'Invoice ready']
 
@@ -33,7 +38,15 @@ const traceQCapabilities = [
   { icon: ReceiptText, title: 'Invoice generation', description: 'Carry completed activity into an organized billing workflow.' },
 ]
 
-export default function ProductsPage() {
+type ProductName = 'traceq' | 'titleflow-ai' | 'tax-flow'
+const productIntroductions = {
+  traceq: { name: 'TraceQ', label: 'OPERATIONS, CONNECTED', headline: 'Every order. Every handoff. One clear view.', description: 'Give your people a shared operating picture. TraceQ connects title-search orders, team assignments, production activity, quality checkpoints, and invoicing.', action: 'Explore the workflow', target: '#traceq' },
+  'titleflow-ai': { name: 'TitleFlow AI', label: 'EXPERTISE, AMPLIFIED', headline: 'More time for the work that needs your judgment.', description: 'Turn source documents into structured records, prepared reports, and focused quality checks—with your searchers in control of every review.', action: 'Watch the walkthrough', target: '#ai-quality' },
+  'tax-flow': { name: 'Tax Flow', label: 'PROPERTY TAX RESEARCH', headline: 'From parcel to a clearer tax record.', description: 'Enter a parcel number, state, and county. Tax Flow retrieves available property-tax information from supported sources and brings it into a structured certificate for your team to review.', action: 'Explore the workflow', target: '#tax-flow' },
+}
+
+export default function ProductsPage({ product }: { product?: ProductName }) {
+  const introduction = product ? productIntroductions[product] : null
   const revealRef = useRef<HTMLElement>(null)
   const revealStageRef = useRef<HTMLDivElement>(null)
   const productDeckRef = useRef<HTMLDivElement>(null)
@@ -45,7 +58,7 @@ export default function ProductsPage() {
     const deck = productDeckRef.current
     if (!section || !stage || !deck) return
 
-    const cards = Array.from(deck.querySelectorAll<HTMLElement>('.product-reveal-card'))
+    const cards = Array.from(deck.querySelectorAll<HTMLElement>('.product-tilt-shell'))
     const revealMedia = window.matchMedia('(min-width: 1100px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)')
     let frame = 0
 
@@ -119,7 +132,17 @@ export default function ProductsPage() {
   return (
     <>
       <Header />
-      <main className="products-page products-v2" id="main-content">
+      <main className={`products-page products-v2${product ? ` product-detail product-detail--${product}` : ' products-overview-stack'}`} id="main-content">
+        {introduction && <section className="product-detail-hero" id="top">
+          <div className="container">
+            <SiteLink className="product-back" href="/products#product-system">← All products</SiteLink>
+            <div className="product-detail-hero__grid">
+              <div><p className="eyebrow"><span /> {introduction.label}</p><div className="product-live"><i /> LIVE PRODUCT · {introduction.name}</div><h1>{introduction.headline}</h1><p className="product-detail-hero__description">{introduction.description}</p><SiteLink className="button" href={introduction.target}>{introduction.action}<ArrowRight size={18} /></SiteLink></div>
+              {product && <ProductHeroVisual product={product} />}
+            </div>
+          </div>
+        </section>}
+        {!product && <>
         <section className="product-hero-v3" id="top" aria-labelledby="products-heading">
           <div className="product-hero-v3__rings" aria-hidden="true">
             <MagicRings
@@ -151,20 +174,20 @@ export default function ProductsPage() {
             <p className="eyebrow"><span /> Invicto product systems</p>
             <h1 id="products-heading">Technology built around the work.</h1>
             <p>
-              One platform organizes title-search operations today. One developing quality layer is designed to make tomorrow’s work more accurate, visible, and accountable.
+              Coordinate the operation with TraceQ. Prepare and review title files with TitleFlow AI. Retrieve property-tax information with Tax Flow. Purpose-built tools for the people behind every property file.
             </p>
-            <a className="button product-hero-v3__button" href="#product-system">
+            <SiteLink className="button product-hero-v3__button" href="#product-system">
               Open the product system <ArrowRight size={18} aria-hidden="true" />
-            </a>
+            </SiteLink>
             <div className="product-hero-v3__signals" aria-label="Invicto product highlights">
-              <span><strong>02</strong> connected systems</span>
-              <span><strong>01</strong> live platform</span>
+              <span><strong>03</strong> focused products</span>
+              <span><strong>One</strong> operational purpose</span>
               <span><strong>Human</strong> review stays central</span>
             </div>
           </div>
-          <a className="product-hero-v3__scroll" href="#product-system" aria-label="Scroll to explore the product system">
+          <SiteLink className="product-hero-v3__scroll" href="#product-system" aria-label="Scroll to explore the product system">
             <span>Scroll to open</span><i><b /></i>
-          </a>
+          </SiteLink>
         </section>
 
         <section
@@ -178,12 +201,12 @@ export default function ProductsPage() {
             <div className="container product-reveal-v3__inner">
               <div className="product-reveal-v3__head">
                 <p className="eyebrow"><span /> The product direction</p>
-                <h2 id="product-system-heading">Two systems. One operating view.</h2>
-                <p>Scroll once to separate the product layers, then enter either system for the complete workflow.</p>
+                <h2 id="product-system-heading">Three products. More room for expertise.</h2>
+                <p>Explore the tools behind order management, title preparation, and property-tax research.</p>
               </div>
 
               <div ref={productDeckRef} className="product-reveal-v3__deck">
-                <a className="product-reveal-card product-reveal-card--traceq" href="#traceq">
+                <TiltedCard><SiteLink className="product-reveal-card product-reveal-card--traceq" href="/products/traceq">
                   <div className="product-reveal-card__top">
                     <span>01 / Operations platform</span>
                     <i><Workflow size={22} aria-hidden="true" /></i>
@@ -197,23 +220,33 @@ export default function ProductsPage() {
                     <li>Order flow</li><li>Workforce</li><li>Billing</li>
                   </ul>
                   <span className="product-reveal-card__link">Explore TraceQ <ArrowRight size={18} aria-hidden="true" /></span>
-                </a>
+                </SiteLink></TiltedCard>
 
-                <a className="product-reveal-card product-reveal-card--quality" href="#ai-quality">
+                <TiltedCard><SiteLink className="product-reveal-card product-reveal-card--quality" href="/products/titleflow-ai">
                   <div className="product-reveal-card__top">
                     <span>02 / Quality intelligence</span>
                     <i><Bot size={22} aria-hidden="true" /></i>
                   </div>
                   <div className="product-reveal-card__copy">
-                    <small>IN DEVELOPMENT · HUMAN REVIEWED</small>
-                    <h3>AI Quality Workflow</h3>
-                    <p>A focused agent-assisted layer for checking typed records, surfacing uncertainty, and routing exceptions to trained reviewers.</p>
+                    <small>LIVE · AI PREPARES · PEOPLE REVIEW</small>
+                    <h3>TitleFlow AI</h3>
+                    <p>From source documents to structured reports: AI-assisted extraction, typing, and quality checks in one title-production workspace.</p>
                   </div>
                   <ul aria-label="AI quality workflow focus areas">
                     <li>Compare</li><li>Surface</li><li>Review</li>
                   </ul>
-                  <span className="product-reveal-card__link">Explore the quality layer <ArrowRight size={18} aria-hidden="true" /></span>
-                </a>
+                  <span className="product-reveal-card__link">Explore TitleFlow AI <ArrowRight size={18} aria-hidden="true" /></span>
+                </SiteLink></TiltedCard>
+                <TiltedCard><SiteLink className="product-reveal-card product-reveal-card--tax" href="/products/tax-flow">
+                  <div className="product-reveal-card__top"><span>03 / Property-tax research</span><i><ReceiptText size={22} aria-hidden="true" /></i></div>
+                  <div className="product-reveal-card__copy">
+                    <small>LIVE · PROPERTY-TAX RETRIEVAL</small>
+                    <h3>Tax Flow</h3>
+                    <p>Enter a parcel number, state, and county. Let automated retrieval bring the property’s available tax information into focus.</p>
+                  </div>
+                  <ul aria-label="Tax Flow focus areas"><li>Identify</li><li>Retrieve</li><li>Review</li></ul>
+                  <span className="product-reveal-card__link">Explore Tax Flow <ArrowRight size={18} aria-hidden="true" /></span>
+                </SiteLink></TiltedCard>
               </div>
 
               <div className="product-reveal-v3__progress" aria-hidden="true">
@@ -223,7 +256,8 @@ export default function ProductsPage() {
           </div>
         </section>
 
-        <section className="section traceq-v2" id="traceq" aria-labelledby="traceq-heading">
+        </>}
+        {product === 'traceq' && <section className="section traceq-v2" id="traceq" aria-labelledby="traceq-heading">
           <div className="container">
             <div className="product-heading-v2">
               <div>
@@ -232,12 +266,21 @@ export default function ProductsPage() {
               </div>
               <div>
                 <p>TraceQ is Invicto’s in-house application platform for coordinating title-search production—bringing orders, people, progress, quality, and billing into one connected operating view.</p>
-                <a href="https://traceqlabs.com/" target="_blank" rel="noreferrer">
+                <SiteLink href="https://traceqlabs.com/" target="_blank" rel="noreferrer">
                   Visit TraceQ Labs <ArrowUpRight size={17} aria-hidden="true" />
-                </a>
+                </SiteLink>
               </div>
             </div>
 
+            <section className="traceq-client-view" id="traceq-client-view" aria-labelledby="traceq-client-heading">
+              <div className="traceq-client-view__intro"><div><p className="eyebrow"><span /> A window into your orders</p><h2 id="traceq-client-heading">Your team stays informed.<br />Your orders stay in view.</h2></div><p>Clients can follow what is happening with their orders in TraceQ Labs—from work in progress to completed, on-hold, or cancelled orders. The dashboard brings recent orders, service-level breakdowns, and order activity into one place.</p></div>
+              <div className="traceq-client-view__points"><span><strong>01 / Track</strong>See the status of your orders.</span><span><strong>02 / Find</strong>Locate recent work by order number.</span><span><strong>03 / Understand</strong>Review order activity and service mix.</span></div>
+              <figure className="product-evidence">
+                <div className="product-evidence__label"><span>TRACEQ / CLIENT ORDER VIEW</span><span>Application screenshot</span></div>
+                <img src="/images/traceq-application-1600.webp" srcSet="/images/traceq-application-640.webp 640w, /images/traceq-application-960.webp 960w, /images/traceq-application-1600.webp 1600w" sizes="(max-width: 760px) calc(100vw - 32px), 1100px" width="1911" height="946" alt="TraceQ dashboard showing order status totals, order analytics, service breakdowns, and recent orders" loading="lazy" decoding="async" />
+                <figcaption><strong>Follow the order, not a collection of messages.</strong><span>Status categories, service breakdowns, and recent orders give the client view its context. Access and visibility are agreed during setup. Figures in this preview are not customer outcomes.</span></figcaption>
+              </figure>
+            </section>
             <div className="traceq-system-v2">
               <div className="traceq-spine" aria-label="Conceptual TraceQ operating workflow">
                 <div className="traceq-spine__bar">
@@ -279,71 +322,30 @@ export default function ProductsPage() {
               </div>
             </div>
           </div>
-        </section>
+        </section>}
 
-        <section className="section ai-lab-v2" id="ai-quality" aria-labelledby="ai-quality-heading">
+        {product === 'titleflow-ai' && <section className="section ai-lab-v2" id="ai-quality" aria-labelledby="ai-quality-heading">
           <div className="container">
             <div className="product-heading-v2 product-heading-v2--light">
               <div>
-                <p className="eyebrow eyebrow--light"><span /> Product 02 · In development</p>
-                <h2 id="ai-quality-heading">A quality layer that knows when to ask.</h2>
+                <p className="eyebrow eyebrow--light"><span /> Product 02 · TitleFlow AI</p>
+                <h2 id="ai-quality-heading">From source records to a file ready for review.</h2>
               </div>
               <div>
-                <p>We are developing an agent-assisted workflow for title-search typing and QC—designed to help find avoidable errors, surface uncertainty, and focus trained reviewers on the decisions that need them.</p>
+                <p>TitleFlow AI brings document extraction, structured typing, report preparation, and AI quality checks into one workspace. Searchers verify the source, correct the record, and retain control over the finished file.</p>
               </div>
             </div>
 
-            <div className="inspection-lab" aria-label="Conceptual AI-assisted quality workflow">
-              <article className="inspection-document">
-                <div className="inspection-panel__head"><span>01 / Typed record</span><i>Source view</i></div>
-                <div className="inspection-document__title"><ScanLine size={20} aria-hidden="true" /><span><small>Title search file</small><strong>Structured typing record</strong></span></div>
-                <dl>
-                  <div><dt>Owner name</dt><dd>Source matched <CheckCircle2 size={15} /></dd></div>
-                  <div><dt>Parcel reference</dt><dd>Format checked <CheckCircle2 size={15} /></dd></div>
-                  <div className="needs-review"><dt>Legal description</dt><dd>Review requested <span>!</span></dd></div>
-                  <div><dt>Effective date</dt><dd>Rule checked <CheckCircle2 size={15} /></dd></div>
-                </dl>
-              </article>
-
-              <article className="inspection-agent">
-                <div className="inspection-panel__head"><span>02 / Agent layer</span><i>Defined checks</i></div>
-                <div className="inspection-agent__core">
-                  <span className="inspection-agent__orbit inspection-agent__orbit--one" />
-                  <span className="inspection-agent__orbit inspection-agent__orbit--two" />
-                  <span className="inspection-agent__bot"><Bot size={29} aria-hidden="true" /></span>
-                </div>
-                <strong>Examine. Compare. Surface.</strong>
-                <p>The agent checks defined fields and workflow rules, then routes uncertainty instead of concealing it.</p>
-                <div className="inspection-agent__status"><i /><span>Exception routed to review</span></div>
-              </article>
-
-              <article className="inspection-review">
-                <div className="inspection-panel__head"><span>03 / Human review</span><i>Accountable release</i></div>
-                <div className="inspection-review__signal"><ShieldCheck size={23} aria-hidden="true" /><span><small>Focused exception</small><strong>Legal description mismatch</strong></span></div>
-                <div className="inspection-review__compare">
-                  <span><small>Typed value</small><b>Version A</b></span>
-                  <i>↔</i>
-                  <span><small>Source record</small><b>Version B</b></span>
-                </div>
-                <p>A trained reviewer resolves the exception and remains responsible for the final quality decision.</p>
-                <span className="inspection-review__button"><CheckCircle2 size={17} /> Reviewer approval</span>
-              </article>
-            </div>
-
-            <div className="ai-principles-v2">
-              <div><Sparkles size={20} aria-hidden="true" /><span><small>Automation role</small><strong>Strengthen judgment</strong></span></div>
-              <div><ScanLine size={20} aria-hidden="true" /><span><small>Agent role</small><strong>Make exceptions visible</strong></span></div>
-              <div><ShieldCheck size={20} aria-hidden="true" /><span><small>Reviewer role</small><strong>Own the release decision</strong></span></div>
-            </div>
-
-            <p className="ai-disclaimer-v2">This product is currently in development. Final capabilities, controls, and availability will be confirmed after workflow validation.</p>
+            <ProductInsights kind="title" />
           </div>
-        </section>
+        </section>}
 
+        {product === 'titleflow-ai' && <TitleFlowGallery />}
+        {product === 'titleflow-ai' && <ProductInsights kind="title-workflow" />}
+        {product === 'tax-flow' && <TaxFlowExperience />}
+        {product && <nav className="product-siblings container" aria-label="Explore other products"><span>Explore the product family</span>{(Object.keys(productIntroductions) as ProductName[]).map(key => <SiteLink key={key} href={`/products/${key}`} aria-current={product === key ? 'page' : undefined}>{productIntroductions[key].name}<ArrowUpRight size={16} /></SiteLink>)}</nav>}
         <div className="products-contact-wave">
-          <div className="products-contact-wave__surface" aria-hidden="true">
-            <DottedSurface size={8} opacity={0.92} sizeAttenuation vertexColors />
-          </div>
+          <div className="products-contact-wave__surface" aria-hidden="true" />
           <Contact />
         </div>
       </main>
@@ -351,3 +353,7 @@ export default function ProductsPage() {
     </>
   )
 }
+
+export function TraceQPage() { return <ProductsPage product="traceq" /> }
+export function TitleFlowPage() { return <ProductsPage product="titleflow-ai" /> }
+export function TaxFlowPage() { return <ProductsPage product="tax-flow" /> }

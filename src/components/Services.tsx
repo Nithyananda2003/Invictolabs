@@ -4,6 +4,8 @@ import { Blocks, Landmark, MapPinned, SearchCheck } from 'lucide-react'
 import { services } from '../data/site'
 import { SectionHeading } from './SectionHeading'
 import { DotGrid } from './ui/DotGrid'
+import { SiteLink } from './SiteLink'
+import { serviceDetails } from '../data/serviceDetails'
 
 const icons = {
   search: SearchCheck,
@@ -12,7 +14,7 @@ const icons = {
   blocks: Blocks,
 }
 
-export function Services() {
+export function Services({ showcase = false }: { showcase?: boolean }) {
   const sectionRef = useRef<HTMLElement>(null)
   const deckRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLSpanElement>(null)
@@ -101,7 +103,7 @@ export function Services() {
     <section ref={sectionRef} className="section services" id="services" aria-labelledby="services-heading">
       <div className="services-stage">
         <div className="services-dot-grid" aria-hidden="true">
-          <DotGrid
+          {!showcase && <DotGrid
             dotSize={3}
             gap={26}
             baseColor="#c4cee9"
@@ -112,14 +114,14 @@ export function Services() {
             shockStrength={2.2}
             resistance={900}
             returnDuration={1.2}
-          />
+          />}
         </div>
         <div className="container">
           <div className="section-intro">
             <SectionHeading
               id="services-heading"
               eyebrow="What we do"
-              title="One partner across your operation."
+              title={showcase ? 'One partner. Every moving part.' : 'One partner across your operation.'}
               description="Purpose-built support for the work behind every confident decision and successful closing."
             />
             <div className="services-meta">
@@ -148,9 +150,10 @@ export function Services() {
                     {service.items.map((item) => <li key={item}>{item}</li>)}
                   </ul>
                   <div className="service-card__status">
-                    <span>Designed for integration</span>
+                    <span>{['Research to review', 'Support across the file', 'Property-level context', 'Built around your process'][index]}</span>
                     <i aria-hidden="true"><b /></i>
                   </div>
+                  <SiteLink className="service-card__details" href={`/services/${serviceDetails[index].slug}`} aria-label={`Explore this service: ${service.title}`}>Explore this service <span aria-hidden="true">↗</span></SiteLink>
                 </article>
               )
             })}

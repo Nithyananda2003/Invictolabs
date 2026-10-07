@@ -1,15 +1,18 @@
+import { useLocation } from 'react-router-dom'
+import { SiteLink } from './SiteLink'
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, BriefcaseBusiness, Menu, X } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react'
 import { company, navigation } from '../data/site'
 import { Logo } from './Logo'
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [resourcesOpen, setResourcesOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false)
+      if (event.key === 'Escape') { setMenuOpen(false); setResourcesOpen(false) }
     }
 
     window.addEventListener('keydown', closeOnEscape)
@@ -31,16 +34,30 @@ export function Header() {
     }
   }, [menuOpen])
 
-  const currentPath = window.location.pathname.replace(/\/+$/, '') || '/'
+  const { pathname: currentPath, state } = useLocation()
+  useEffect(() => {
+    setMenuOpen(false)
+    setResourcesOpen(false)
+  }, [currentPath])
+  useEffect(() => {
+    if (!resourcesOpen) return
+    const close = (event: PointerEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setResourcesOpen(false)
+    }
+    document.addEventListener('pointerdown', close)
+    return () => document.removeEventListener('pointerdown', close)
+  }, [resourcesOpen])
+  const resourceLinks = navigation.filter(item => ['/blogs', '/case-studies', '/faq'].includes(item.href))
+  const currentHash = state?.scrollTarget ? `#${state.scrollTarget}` : ''
   const isActive = (href: string) => {
-    const destination = new URL(href, window.location.origin)
+    const destination = new URL(href, 'https://invictolabs.com')
     const destinationPath = destination.pathname.replace(/\/+$/, '') || '/'
-    return destinationPath === currentPath && destination.hash === '#top'
+    return destination.hash ? destinationPath === currentPath && destination.hash === currentHash : destinationPath === currentPath || (['/products', '/services', '/blogs', '/case-studies'].includes(destinationPath) && currentPath.startsWith(`${destinationPath}/`))
   }
 
   useEffect(() => {
     const closeOnDesktop = () => {
-      if (window.innerWidth > 960) setMenuOpen(false)
+      if (window.innerWidth > 1280) setMenuOpen(false)
     }
 
     window.addEventListener('resize', closeOnDesktop)
@@ -49,7 +66,7 @@ export function Header() {
 
   return (
     <>
-      <a className="skip-link" href="#main-content">Skip to main content</a>
+      <SiteLink className="skip-link" href="#main-content">Skip to main content</SiteLink>
       <header className="site-header">
         <div className="container header-inner" ref={menuRef}>
           <Logo />
@@ -70,33 +87,30 @@ export function Header() {
           className={`header-menu${menuOpen ? ' header-menu--open' : ''}`}
         >
           <nav className="primary-nav" aria-label="Primary navigation">
-            {navigation.map((item) => (
-              <a
+            {navigation.filter(item => !resourceLinks.includes(item)).map((item) => (
+              <SiteLink
                 key={item.href}
                 href={item.href}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 onClick={() => setMenuOpen(false)}
               >
                 {item.label}
-              </a>
+              </SiteLink>
             ))}
+            <div className="header-resources">
+              <button type="button" className="header-resources__toggle" aria-expanded={resourcesOpen} aria-controls="resource-links" data-active={resourceLinks.some(item => isActive(item.href))} onClick={() => setResourcesOpen(open => !open)}>Resources <ChevronDown size={14} aria-hidden="true" /></button>
+              <div id="resource-links" className="header-resources__links" hidden={!resourcesOpen}>
+                {resourceLinks.map(item => <SiteLink key={item.href} href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} onClick={() => { setResourcesOpen(false); setMenuOpen(false) }}><strong>{item.label}</strong><span>{item.href === '/blogs' ? 'Practical operations guides' : item.href === '/faq' ? 'Answers before you begin' : 'Explore the working process'}</span></SiteLink>)}
+              </div>
+            </div>
           </nav>
 
           <div className="header-actions">
-            <a
-              className="header-careers"
-              href={company.careers}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => setMenuOpen(false)}
-            >
-              <BriefcaseBusiness size={16} aria-hidden="true" />
-              Careers
-            </a>
-            <a className="button button--small" href="/#contact" onClick={() => setMenuOpen(false)}>
+            <SiteLink className="header-careers" href={company.careers} target="_blank" rel="noreferrer" onClick={() => setMenuOpen(false)}>Careers <ArrowUpRight size={14} aria-hidden="true" /></SiteLink>
+            <SiteLink className="button button--small" href={currentPath === '/our-company' || /^\/(blogs|case-studies)(\/|$)/.test(currentPath) ? '/#contact' : '#contact'} onClick={() => setMenuOpen(false)}>
               Talk to our team
               <ArrowUpRight size={16} aria-hidden="true" />
-            </a>
+            </SiteLink>
           </div>
         </div>
         </div>

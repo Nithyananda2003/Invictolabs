@@ -4,6 +4,9 @@ node_modules/
 
 # Production output
 dist/
+.ssr/
+lighthouse-*.json
+lighthouse-*.html
 production-dist*/
 docs/production-build-meta*.json
 

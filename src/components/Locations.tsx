@@ -1,10 +1,10 @@
+import { SiteLink } from './SiteLink'
 import { useEffect, useRef } from 'react'
 import { MapPin } from 'lucide-react'
 import { locations } from '../data/site'
 import { SectionHeading } from './SectionHeading'
 import { Globe } from './ui/CobeGlobe'
 import type { GlobeArc, GlobeMarker } from './ui/CobeGlobe'
-import { DotGrid } from './ui/DotGrid'
 
 const globeMarkers: GlobeMarker[] = [
   { id: 'dallas', location: [32.7767, -96.797], label: 'Dallas · HQ' },
@@ -52,18 +52,6 @@ export function Locations() {
   return (
     <section ref={sectionRef} className="section locations" id="locations" aria-labelledby="locations-heading">
       <div className="locations-dot-grid" aria-hidden="true">
-        <DotGrid
-          dotSize={3}
-          gap={26}
-          baseColor="#c4cee9"
-          activeColor="#3159e8"
-          proximity={140}
-          speedTrigger={135}
-          shockRadius={220}
-          shockStrength={2.2}
-          resistance={900}
-          returnDuration={1.2}
-        />
       </div>
       <div className="container locations-layout">
         <div className="locations-copy">
@@ -81,7 +69,7 @@ export function Locations() {
                 <div>
                   <p>{location.type}</p>
                   <h3>{location.city}</h3>
-                  <address>{location.address}</address>
+                  <address>{location.address}</address><SiteLink className="location-directions" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address)}`} target="_blank" rel="noreferrer">View directions ↗</SiteLink>
                 </div>
               </article>
             ))}

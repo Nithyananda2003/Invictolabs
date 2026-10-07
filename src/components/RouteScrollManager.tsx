@@ -23,6 +23,11 @@ function scrollToRouteTarget(hash: string, behavior: ScrollBehavior) {
   const target = document.getElementById(id)
   if (!target) return false
 
+  if (id === 'main-content') {
+    target.setAttribute('tabindex', '-1')
+    target.focus({ preventScroll: true })
+  }
+
   const headerOffset = document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? FALLBACK_HEADER_OFFSET
   const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset
   window.scrollTo({ top: Math.max(0, targetTop), behavior })
@@ -30,12 +35,11 @@ function scrollToRouteTarget(hash: string, behavior: ScrollBehavior) {
 }
 
 function scrollAfterRender(hash: string, behavior: ScrollBehavior) {
-  let attempts = 0
+  const started = performance.now()
   let frame = 0
 
   const findAndScroll = () => {
-    attempts += 1
-    if (scrollToRouteTarget(hash, behavior) || attempts >= 16) return
+    if (scrollToRouteTarget(hash, behavior) || performance.now() - started >= 5000) return
     frame = window.requestAnimationFrame(findAndScroll)
   }
 
@@ -50,9 +54,10 @@ type RouteScrollManagerProps = {
   behavior: ScrollBehavior
   children: ReactNode
   locationKey: string
+  target: string
 }
 
-export function RouteScrollManager({ behavior, children, locationKey }: RouteScrollManagerProps) {
+export function RouteScrollManager({ behavior, children, locationKey, target }: RouteScrollManagerProps) {
   useEffect(() => {
     const previousRestoration = window.history.scrollRestoration
     window.history.scrollRestoration = 'manual'
@@ -61,7 +66,7 @@ export function RouteScrollManager({ behavior, children, locationKey }: RouteScr
     }
   }, [])
 
-  useEffect(() => scrollAfterRender(window.location.hash, behavior), [behavior, locationKey])
+  useEffect(() => scrollAfterRender(target ? `#${target}` : '', behavior), [behavior, locationKey, target])
 
   return children
 }

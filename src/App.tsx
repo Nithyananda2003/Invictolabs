@@ -6,14 +6,15 @@ import { Hero } from './components/Hero'
 import { Locations } from './components/Locations'
 import { Partnership } from './components/Partnership'
 import { Services } from './components/Services'
+import './home-services.css'
 
 export default function App() {
   return (
     <>
       <Header />
-      <main className="stack-page" id="main-content">
+      <main className="stack-page home-page" id="main-content">
         <Hero />
-        <Services />
+        <Services showcase />
         <Approach />
         <Partnership />
         <Locations />

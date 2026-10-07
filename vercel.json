@@ -29,9 +29,23 @@
     { "source": "/product", "destination": "/products", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/blogs", "destination": "/blogs/index.html" },
+    { "source": "/case-studies", "destination": "/case-studies/index.html" },
+    { "source": "/blogs/:slug", "destination": "/blogs/:slug/index.html" },
+    { "source": "/case-studies/:slug", "destination": "/case-studies/:slug/index.html" },
     { "source": "/our-company", "destination": "/our-company/index.html" },
     { "source": "/faq", "destination": "/faq/index.html" },
     { "source": "/products", "destination": "/products/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/products/traceq", "destination": "/products/traceq/index.html" },
+    { "source": "/products/titleflow-ai", "destination": "/products/titleflow-ai/index.html" },
+    { "source": "/products/tax-flow", "destination": "/products/tax-flow/index.html" },
+    { "source": "/services", "destination": "/services/index.html" },
+    { "source": "/services/title", "destination": "/services/title/index.html" },
+    { "source": "/services/mortgage", "destination": "/services/mortgage/index.html" },
+    { "source": "/services/tax-property", "destination": "/services/tax-property/index.html" },
+    { "source": "/services/technology", "destination": "/services/technology/index.html" },
+    { "source": "/location", "destination": "/location/index.html" },
+    { "source": "/our-approach", "destination": "/our-approach/index.html" },
+    { "source": "/((?!\\.well-known/).*)", "destination": "/index.html" }
   ]
 }

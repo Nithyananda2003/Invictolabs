@@ -1,3 +1,4 @@
+import { SiteLink } from './SiteLink'
 import { ArrowUpRight } from 'lucide-react'
 import { company, navigation } from '../data/site'
 import { Logo } from './Logo'
@@ -10,21 +11,29 @@ export function Footer() {
           <Logo inverse />
           <p>Your all-in-one outsourcing partner for mortgage, title, tax, and MLS services across the nation.</p>
         </div>
-        <div className="footer-nav">
+        <nav className="footer-nav footer-nav--explore" aria-label="Footer navigation">
           <p>Explore</p>
-          {navigation.map((item) => <a href={item.href} key={item.href}>{item.label}</a>)}
-        </div>
+          {navigation.map((item) => <SiteLink href={item.href} key={item.href}>{item.label}</SiteLink>)}
+        </nav>
+        <nav className="footer-nav" aria-label="Footer products">
+          <p>Products</p>
+          <SiteLink href="/products/traceq">TraceQ Labs</SiteLink>
+          <SiteLink href="/products/titleflow-ai">TitleFlow AI</SiteLink>
+          <SiteLink href="/products/tax-flow">Tax Flow</SiteLink>
+        </nav>
         <div className="footer-nav">
           <p>Connect</p>
-          <a href={`mailto:${company.email}`}>Email us</a>
-          <a href={company.linkedIn} target="_blank" rel="noreferrer">
+          <SiteLink href={`mailto:${company.email}`}>{company.email}</SiteLink>
+          <SiteLink href={`tel:${company.phoneHref}`}>{company.phone}</SiteLink>
+          <SiteLink href={company.linkedIn} target="_blank" rel="noreferrer">
             LinkedIn <ArrowUpRight size={14} />
-          </a>
+          </SiteLink>
+          <SiteLink href={company.careers} target="_blank" rel="noreferrer">Careers <ArrowUpRight size={14} /></SiteLink>
         </div>
       </div>
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} Invicto. All rights reserved.</span>
-        <a href="/#top" aria-label="Return to the Invicto homepage">Back to homepage ↑</a>
+        <SiteLink href="/">Back to homepage ↑</SiteLink>
       </div>
     </footer>
   )

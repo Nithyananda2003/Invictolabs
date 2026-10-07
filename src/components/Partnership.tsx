@@ -1,9 +1,9 @@
+import { SiteLink } from './SiteLink'
 import { useEffect, useRef } from 'react'
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react'
 import { ArrowRight, Layers3, ShieldCheck, Workflow } from 'lucide-react'
 import { benefits, partnershipProofs } from '../data/site'
 import { SectionHeading } from './SectionHeading'
-import { DotGrid } from './ui/DotGrid'
 
 const icons = {
   workflow: Workflow,
@@ -42,18 +42,6 @@ export function Partnership() {
   return (
     <section ref={sectionRef} className="section partnership" id="partnership" aria-labelledby="partnership-heading">
       <div className="partnership-dot-grid" aria-hidden="true">
-        <DotGrid
-          dotSize={2.2}
-          gap={31}
-          baseColor="#cbd2e4"
-          activeColor="#3159e8"
-          proximity={120}
-          speedTrigger={120}
-          shockRadius={190}
-          shockStrength={1.7}
-          resistance={900}
-          returnDuration={1.35}
-        />
       </div>
 
       <div className="container partnership-shell">
@@ -73,18 +61,18 @@ export function Partnership() {
         <div className="partnership-board">
           <article className="partnership-feature">
             <div className="partnership-feature__topline">
-              <span><i /> Delivery network active</span>
-              <span>24 / 7</span>
+              <span><i /> Connected delivery teams</span>
+              <span>U.S. operations support</span>
             </div>
             <div>
-              <p className="partnership-feature__eyebrow">The capacity promise</p>
-              <h3>Scale capacity. Preserve quality. Say yes to growth.</h3>
-              <p>Current-owner, two-owner, full, and update search support—delivered inside the workflow your team already uses.</p>
+              <p className="partnership-feature__eyebrow">A defined working process</p>
+              <h3>Research, review, and a clear next step.</h3>
+              <p>Discuss the search type, source access, output format, and review responsibilities your team needs before work begins.</p>
             </div>
             <div className="partnership-flow" aria-label="Search, human review, and client-ready workflow">
               <span>Search</span><i><b /></i>
               <span>Human review</span><i><b /></i>
-              <span>Client-ready</span>
+              <span>Client review</span>
             </div>
           </article>
 
@@ -111,16 +99,16 @@ export function Partnership() {
         </div>
 
         <div className="signal-band" aria-label="Invicto company and operating facts">
-          {partnershipProofs.map((proof, index) => (
+          {partnershipProofs.map((proof) => (
             <div key={proof.label}>
               <strong>{proof.value}</strong>
               <span>{proof.label}</span>
-              {index === 0 && <small>Title search</small>}
+              
             </div>
           ))}
-          <a href="#contact" aria-label="Talk with Invicto">
+          <SiteLink href="#contact" aria-label="Talk with Invicto">
             <ArrowRight size={19} />
-          </a>
+          </SiteLink>
         </div>
       </div>
     </section>

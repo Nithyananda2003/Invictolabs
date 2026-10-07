@@ -1,11 +1,12 @@
+import { SiteLink } from './SiteLink'
 type LogoProps = {
   inverse?: boolean
 }
 
 export function Logo({ inverse = false }: LogoProps) {
   return (
-    <a className={`logo${inverse ? ' logo--inverse' : ''}`} href="/#top" aria-label="Invicto homepage">
-      <img src="/invicto-logo.webp" alt="Invicto" width="640" height="238" decoding="async" />
-    </a>
+    <SiteLink className={`logo${inverse ? ' logo--inverse' : ''}`} href="/" aria-label="Invicto homepage">
+      <img src="/invicto-logo-360.webp" alt="Invicto" width="360" height="134" decoding="async" />
+    </SiteLink>
   )
 }

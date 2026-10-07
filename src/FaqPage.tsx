@@ -1,3 +1,4 @@
+import { SiteLink } from './components/SiteLink'
 import { useState } from 'react'
 import { ArrowRight, ChevronDown, FileCheck2, Handshake, Layers3 } from 'lucide-react'
 import { Contact } from './components/Contact'
@@ -26,7 +27,7 @@ export default function FaqPage() {
             <p>Clear answers about coverage, quality, workflow integration, and what it takes to get started with Invicto.</p>
             <div className="faq-hero__signals" aria-label="Invicto operating highlights">
               <span><strong>06</strong> practical answers</span>
-              <span><strong>24/7</strong> operations</span>
+              <span><strong>Clear</strong> engagement scope</span>
               <span><strong>Human</strong> reviewed delivery</span>
             </div>
           </div>
@@ -39,9 +40,9 @@ export default function FaqPage() {
               <p className="eyebrow"><span /> Before we begin</p>
               <h2 id="faq-list-heading">Start with clarity.</h2>
               <p>Every engagement is shaped around the client’s workflow, service levels, volume, and definition of done.</p>
-              <a href={`mailto:${company.email}`}>
+              <SiteLink href={`mailto:${company.email}`}>
                 Ask another question <ArrowRight size={17} />
-              </a>
+              </SiteLink>
             </aside>
 
             <div className="faq-list">
@@ -63,6 +64,7 @@ export default function FaqPage() {
                     <div
                       className="faq-item__answer"
                       id={`faq-answer-${index}`}
+                      hidden={!isOpen}
                       role="region"
                       aria-labelledby={`faq-question-${index}`}
                     >
@@ -82,7 +84,7 @@ export default function FaqPage() {
                 <p className="eyebrow eyebrow--light"><span /> Client experience</p>
                 <h2 id="experience-heading">What the partnership is designed to feel like.</h2>
               </div>
-              <p>Outcome-focused—not invented testimonials. These are the operating experiences our delivery model is built to create.</p>
+              <p>The principles that guide how we organize work, communicate exceptions, and support your team.</p>
             </div>
             <div className="client-experience__grid">
               {clientExperience.map((item, index) => {

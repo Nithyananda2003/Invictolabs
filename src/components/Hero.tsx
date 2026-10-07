@@ -1,3 +1,4 @@
+import { SiteLink } from './SiteLink'
 import { useEffect, useState } from 'react'
 import { ArrowRight, Check } from 'lucide-react'
 import { Silk } from './ui/Silk'
@@ -68,14 +69,14 @@ export function Hero() {
             Invicto brings dependable title research and flexible mortgage operations support into one connected workflow—helping your team move every property file forward with confidence.
           </p>
           <div className="hero-actions">
-            <a className="button" href="#contact">
+            <SiteLink className="button" href="#contact">
               Start a conversation
               <ArrowRight size={18} aria-hidden="true" />
-            </a>
-            <a className="text-link" href="#services">
+            </SiteLink>
+            <SiteLink className="text-link" href="/services">
               Explore our services
               <span aria-hidden="true">↘</span>
-            </a>
+            </SiteLink>
           </div>
           <div className="hero-note">
             <Check size={17} aria-hidden="true" />

@@ -8,31 +8,21 @@ export const company = {
 }
 
 export const navigation = [
-  { label: 'Home', href: '/#top' },
-  { label: 'Our Company', href: '/our-company#top' },
-  { label: 'Products', href: '/products#top' },
-  { label: 'Services', href: '/#services' },
-  { label: 'Our Approach', href: '/#approach' },
-  { label: 'Locations', href: '/#locations' },
-  { label: 'FAQ', href: '/faq#top' },
+  { label: 'Home', href: '/' },
+  { label: 'Our Company', href: '/our-company' },
+  { label: 'Products', href: '/products' },
+  { label: 'Services', href: '/services' },
+  { label: 'Our Approach', href: '/our-approach' },
+  { label: 'Locations', href: '/location' },
+  { label: 'Blogs', href: '/blogs' },
+  { label: 'Workflow Walkthroughs', href: '/case-studies' },
+  { label: 'FAQ', href: '/faq' },
 ]
 
 export const companyStats = [
-  {
-    value: '1M+',
-    label: 'Orders completed',
-    description: 'A million-plus client orders delivered across our service portfolio.',
-  },
-  {
-    value: '~200',
-    label: 'Team members',
-    description: 'A connected operations team serving clients across the United States.',
-  },
-  {
-    value: '98%',
-    label: 'Quality performance',
-    description: 'Company-reported quality performance across completed client work.',
-  },
+  { value: 'Title', label: 'Research & production', description: 'Support for property research and working files.' },
+  { value: 'Mortgage', label: 'Operational support', description: 'Administrative support across the file lifecycle.' },
+  { value: 'Technology', label: 'Purpose-built tools', description: 'Applications built around operational work.' },
 ]
 
 export const leaders = [
@@ -41,29 +31,39 @@ export const leaders = [
     role: 'Founder & President',
     image: '/jay-prasad.webp',
     linkedIn: 'https://www.linkedin.com/in/jay-prasad-jp-734a2557/',
-    bio: 'Jay guides Invicto’s strategic direction and nationwide client partnerships, with a focus on disciplined operations, scalable delivery, and relationships built for the long term.',
+    bio: 'Jay guides company strategy and U.S. client partnerships, connecting client requirements with Invicto’s operating teams.',
+    focus: 'Company strategy · Client partnerships',
   },
   {
     name: 'Sneha Gowda',
     role: 'Founder & CEO',
     image: '/sneha-gowda.webp',
     linkedIn: 'https://www.linkedin.com/in/sneha-gowda-495593195/',
-    bio: 'Sneha leads Invicto’s people and growth vision, bringing teams together around smarter solutions, stronger collaboration, and meaningful outcomes for every client.',
+    bio: 'Sneha leads the company’s people and growth priorities, bringing delivery teams and technology initiatives together around client needs.',
+    focus: 'People leadership · Business growth',
+  },
+  {
+    name: 'Tushar',
+    role: 'Strategic Operations Leader',
+    image: '/tushar-portrait.png',
+    linkedIn: 'https://www.linkedin.com/in/tusharnew/',
+    bio: 'Tushar brings over two decades of experience in telecom, media, and technology, including strategy, consulting, and global operations. His education includes an MBA from IIT Delhi and leadership development at IIM Bangalore.',
+    focus: 'Operational strategy · Change management',
   },
 ]
 
 export const principles = [
   {
     title: 'Own the outcome',
-    description: 'We stay accountable from the first handoff to the completed order.',
+    description: 'Assign an owner to each handoff and make outstanding items visible.',
   },
   {
     title: 'Make quality visible',
-    description: 'Clear processes and communication turn consistency into confidence.',
+    description: 'Use review criteria and source context to explain what has been checked and what still needs attention.',
   },
   {
     title: 'Grow together',
-    description: 'We invest in relationships that create lasting value for clients and teams.',
+    description: 'Review delivery feedback together and adjust the process as requirements change.',
   },
 ]
 
@@ -115,42 +115,42 @@ export const approach = [
     icon: 'discover',
     title: 'Discover',
     description:
-      'We map your workflow, priorities, and service levels before designing the right operating model.',
+      'Map the tasks, inputs, and constraints into an initial scope for your team to review.',
   },
   {
     number: '02',
     icon: 'align',
     title: 'Align',
     description:
-      'We define ownership, outcomes, and a shared definition of done before delivery begins.',
+      'Define the review checklist, delivery format, and who owns each decision.',
   },
   {
     number: '03',
     icon: 'integrate',
     title: 'Integrate',
     description:
-      'Our team works inside your operating rhythm, with clear handoffs and communication.',
+      'Confirm authorized system access, communication channels, and escalation contacts.',
   },
   {
     number: '04',
     icon: 'activate',
     title: 'Activate',
     description:
-      'A controlled launch turns the agreed plan into dependable day-to-day production capacity.',
+      'Start with an agreed initial assignment and review the output before expanding the scope.',
   },
   {
     number: '05',
     icon: 'deliver',
     title: 'Deliver',
     description:
-      'Visible quality, responsive communication, and accountable execution keep every file moving.',
+      'Deliver the prepared work with outstanding items and exceptions identified for review.',
   },
   {
     number: '06',
     icon: 'evolve',
     title: 'Evolve',
     description:
-      'We refine the system as your volume, priorities, and opportunities change.',
+      'Use delivery feedback to revise instructions, priorities, and capacity requirements.',
   },
 ]
 
@@ -179,10 +179,10 @@ export const benefits = [
 ]
 
 export const partnershipProofs = [
-  { value: '44-state', label: 'coverage' },
-  { value: '24/7', label: 'operations' },
-  { value: '201–500', label: 'company size' },
-  { value: '2021', label: 'founded' },
+  { value: 'Dallas', label: 'Headquarters' },
+  { value: 'Bengaluru', label: 'Delivery center' },
+  { value: 'People', label: 'Review & oversight' },
+  { value: 'Technology', label: 'Workflow support' },
 ]
 
 export const faqs = [
@@ -194,7 +194,7 @@ export const faqs = [
   {
     question: 'Will your team work inside our existing systems and process?',
     answer:
-      'Yes. The engagement begins by mapping your workflow, service levels, handoffs, communication rhythm, and definition of done. Delivery is then structured to feel like added capacity inside your operation rather than a disconnected external queue.',
+      'We first confirm the access and compatibility your systems allow. The engagement begins by mapping your workflow, service levels, handoffs, communication rhythm, and definition of done. Delivery is then structured to feel like added capacity inside your operation rather than a disconnected external queue.',
   },
   {
     question: 'How do you protect quality when volume changes?',
@@ -204,7 +204,7 @@ export const faqs = [
   {
     question: 'What geographic and operating coverage is available?',
     answer:
-      'Invicto supports clients across the United States from its Dallas headquarters and Bengaluru delivery center. Current company information highlights 44-state title-search coverage and 24/7 operations; final coverage is confirmed for each service during scoping.',
+      'Invicto supports clients across the United States from its Dallas headquarters and Bengaluru delivery center. Confirm the jurisdictions, operating hours, and service scope your engagement needs with our team.',
   },
   {
     question: 'What does onboarding look like?',

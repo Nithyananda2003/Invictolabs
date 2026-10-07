@@ -168,3 +168,15 @@ Company positioning and factual details were adapted from Invicto's public Linke
 2. Add approved client proof, testimonials, and measurable outcomes when available.
 3. Connect the contact CTA to a CRM or secure form endpoint if email is not the final workflow.
 4. Add approved privacy, terms, cookie, and accessibility language before public launch.
+# Production rendering and performance (October 2026)
+
+`npm run build` now builds the React client and a temporary server-rendering bundle,
+then pre-renders all 14 public routes. React Router still handles navigation;
+the generated HTML improves first render and crawler access. Vercel rewrites
+serve each route's generated HTML. Do not edit files inside `dist` or `.ssr`.
+
+Production domain metadata targets `https://invictolabs.com`; DNS is unchanged.
+Use `npm run preview -- --host 127.0.0.1 --port 4173` for production testing,
+then `npm run verify:production`, `npm run audit:desktop` or `npm run audit:mobile`
+in another terminal. See `PERFORMANCE-NOTES.txt` for measured results and limits.
+
