@@ -4,8 +4,8 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 const HomePage = lazy(() => import('./App'))
 const OperationsPage = lazy(() => import('./OperationsPage'))
 const ServiceDetailPage = lazy(() => import('./ServiceDetailPage'))
-import { serviceDetails } from './data/serviceDetails'
-import { blogs, caseStudies } from './data/insights'
+import { routeMetadata } from './data/routeMetadata'
+export { routeMetadata } from './data/routeMetadata'
 const AboutPage = lazy(() => import('./AboutPage'))
 const FaqPage = lazy(() => import('./FaqPage'))
 const InsightsPage = lazy(() => import('./InsightsPage'))
@@ -18,6 +18,8 @@ import { RouteScrollManager } from './components/RouteScrollManager'
 import './styles.css'
 import './refinements.css'
 import './site-polish.css'
+import { syncMetadata } from './seo'
+export { structuredData, SITE_URL, SHARE_IMAGE } from './seo'
 
 const cleanRouteAliases: Record<string, string> = {
   '/locations': '/location',
@@ -42,36 +44,6 @@ const cleanRouteAliases: Record<string, string> = {
 }
 
 
-export const routeMetadata: Record<string, { title: string; description: string }> = {
-  ...Object.fromEntries(blogs.map(item => [`/blogs/${item.slug}`, { title: `${item.title} | Invicto Journal`, description: item.intro }])),
-  ...Object.fromEntries(caseStudies.map(item => [`/case-studies/${item.slug}`, { title: `${item.title} | Invicto Workflows`, description: item.intro }])),
-  '/blogs': { title: 'Blogs | Invicto', description: 'Practical perspectives on title research, mortgage operations, and operations technology.' },
-  '/case-studies': { title: 'Workflow Walkthroughs | Invicto', description: 'Explore illustrative operational workflows connecting Invicto services and technology.' },
-  ...Object.fromEntries(serviceDetails.map(service => [`/services/${service.slug}`, { title: `${service.name} | Invicto`, description: service.intro }])),
-  '/services': { title: 'Services | Invicto', description: 'Explore Invicto mortgage, title, tax, and MLS operational support.' },
-  '/location': { title: 'Locations | Invicto', description: 'Connect with Invicto in Dallas and Bengaluru.' },
-  '/our-approach': { title: 'Our Approach | Invicto', description: 'See how Invicto aligns people, processes, and delivery with your operations.' },
-  '/products/traceq': { title: 'TraceQ | Invicto', description: 'Connect orders, people, production, quality review, and invoicing with TraceQ.' },
-  '/products/titleflow-ai': { title: 'TitleFlow AI | Invicto', description: 'Explore AI-assisted title extraction, report preparation, and human-reviewed quality checks.' },
-  '/products/tax-flow': { title: 'Tax Flow | Invicto', description: 'Retrieve available property-tax information using a parcel number, state, and county.' },
-  '/': {
-    title: 'Invicto | Mortgage & Title Operations Partner',
-    description: 'Invicto is a nationwide operations partner for mortgage, title, tax, and MLS services.',
-  },
-  '/our-company': {
-    title: 'Our Company | Invicto',
-    description: 'Meet the leaders and operating team behind Invicto’s nationwide mortgage and title support.',
-  },
-  '/products': {
-    title: 'Products | Invicto Operations Technology',
-    description: 'Explore TraceQ, TitleFlow AI, and Tax Flow: operations management, AI-assisted title preparation and review, and property-tax retrieval.',
-  },
-  '/faq': {
-    title: 'Client FAQ | Invicto',
-    description: 'Clear answers about Invicto’s coverage, quality, workflow integration, and onboarding.',
-  },
-}
-
 
 export function SiteRoutes() {
   const location = useLocation()
@@ -90,12 +62,7 @@ export function SiteRoutes() {
   }
   useEffect(() => {
     const metadata = routeMetadata[path] ?? { title: 'Page not found | Invicto', description: 'Explore Invicto services and products.' }
-    document.title = metadata.title
-    document.querySelector('meta[name="description"]')?.setAttribute('content', metadata.description)
-    const canonical = new URL(path, 'https://invictolabs.com').href
-    document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonical)
-    document.querySelector('meta[property="og:title"]')?.setAttribute('content', metadata.title)
-    document.querySelector('meta[property="og:description"]')?.setAttribute('content', metadata.description)
+    syncMetadata(path, metadata, Boolean(routeMetadata[path]))
   }, [path])
   if (path !== location.pathname || location.hash) return <Navigate replace to={path + location.search} state={{ ...location.state, scrollTarget: hash.slice(1) }} />
   return (
@@ -103,7 +70,7 @@ export function SiteRoutes() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/services" element={<OperationsPage key="services" kind="services" />} />
-        {serviceDetails.map(service => <Route key={service.slug} path={`/services/${service.slug}`} element={<ServiceDetailPage key={service.slug} slug={service.slug} />} />)}
+        {Object.keys(routeMetadata).filter(route => route.startsWith('/services/')).map(route => <Route key={route} path={route} element={<ServiceDetailPage key={route} slug={route.split('/').pop()!} />} />)}
         <Route path="/location" element={<OperationsPage key="location" kind="location" />} />
         <Route path="/our-approach" element={<OperationsPage key="our-approach" kind="our-approach" />} />
         <Route path="/our-company" element={<AboutPage />} />

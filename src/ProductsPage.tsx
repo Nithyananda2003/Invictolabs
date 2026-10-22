@@ -25,7 +25,10 @@ import { ProductHeroVisual } from './components/ProductHeroVisual'
 import { TaxFlowExperience } from './components/TaxFlowExperience'
 import { TitleFlowGallery } from './components/TitleFlowGallery'
 import './products-stack.css'
-import TiltedCard from './components/ui/TiltedCard'
+const LazyTiltedCard = lazy(() => import('./components/ui/TiltedCard'))
+function TiltedCard(props: React.ComponentProps<typeof LazyTiltedCard>) {
+  return <Suspense fallback={<div className="product-tilt-shell">{props.children}</div>}><LazyTiltedCard {...props} /></Suspense>
+}
 
 const workflowStages = ['Order intake', 'Assignment', 'Production', 'Quality review', 'Invoice ready']
 

@@ -4,7 +4,7 @@ import { ArrowRight, ChevronDown, FileCheck2, Handshake, Layers3 } from 'lucide-
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { DottedSurface } from './components/ui/DottedSurface'
+import { DeferredDottedSurface as DottedSurface } from './components/DeferredDottedSurface'
 import { GridBoxBackground } from './components/ui/GridBoxBackground'
 import { clientExperience, company, faqs } from './data/site'
 

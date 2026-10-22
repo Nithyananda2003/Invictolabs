@@ -1909,7 +1909,8 @@ h3 {
 }
 
 .hero-copy > * {
-  animation: hero-rise 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* Keep the main message visible in the first server-rendered frame. */
+  animation: none;
 }
 
 .hero-copy h1 {

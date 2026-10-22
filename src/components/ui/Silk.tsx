@@ -147,7 +147,7 @@ export function Silk({
       previousTime = time
       material.uniforms.uTime.value += 0.1 * delta
       renderer.render(scene, camera)
-      if (visible && !reducedMotion.matches) frame = window.requestAnimationFrame(render)
+      if (visible && !document.hidden && !reducedMotion.matches) frame = window.requestAnimationFrame(render)
     }
 
     const startRendering = () => {
@@ -167,9 +167,14 @@ export function Silk({
       { rootMargin: '20% 0px' },
     )
     const handleMotionChange = () => startRendering()
+    const handleVisibility = () => {
+      if (document.hidden) { cancelAnimationFrame(frame); frame = 0 }
+      else if (visible) startRendering()
+    }
 
     visibilityObserver.observe(host)
     reducedMotion.addEventListener('change', handleMotionChange)
+    document.addEventListener('visibilitychange', handleVisibility)
     startRendering()
 
     return () => {
@@ -177,6 +182,7 @@ export function Silk({
       resizeObserver.disconnect()
       visibilityObserver.disconnect()
       reducedMotion.removeEventListener('change', handleMotionChange)
+      document.removeEventListener('visibilitychange', handleVisibility)
       geometry.dispose()
       material.dispose()
       renderer.dispose()

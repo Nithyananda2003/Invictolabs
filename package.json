@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build --manifest && vite build --ssr src/main.tsx --outDir .ssr && node scripts/prerender.mjs",
+    "build": "tsc -b && vite build --manifest && vite build --ssr src/main.tsx --outDir .ssr && node scripts/prerender.mjs && node scripts/verify-seo.mjs",
+    "verify:seo": "node scripts/verify-seo.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b --pretty",
     "verify:production": "node scripts/verify-production.mjs",

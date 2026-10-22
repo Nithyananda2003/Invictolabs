@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef } from 'react'
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react'
 import { Blocks, Landmark, MapPinned, SearchCheck } from 'lucide-react'
 import { services } from '../data/site'
 import { SectionHeading } from './SectionHeading'
-import { DotGrid } from './ui/DotGrid'
+const DotGrid = lazy(() => import('./ui/DotGrid'))
 import { SiteLink } from './SiteLink'
 import { serviceDetails } from '../data/serviceDetails'
 
@@ -103,7 +103,7 @@ export function Services({ showcase = false }: { showcase?: boolean }) {
     <section ref={sectionRef} className="section services" id="services" aria-labelledby="services-heading">
       <div className="services-stage">
         <div className="services-dot-grid" aria-hidden="true">
-          {!showcase && <DotGrid
+          {!showcase && <Suspense fallback={null}><DotGrid
             dotSize={3}
             gap={26}
             baseColor="#c4cee9"
@@ -114,7 +114,7 @@ export function Services({ showcase = false }: { showcase?: boolean }) {
             shockStrength={2.2}
             resistance={900}
             returnDuration={1.2}
-          />}
+          /></Suspense>}
         </div>
         <div className="container">
           <div className="section-intro">

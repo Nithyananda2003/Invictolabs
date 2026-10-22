@@ -1,7 +1,7 @@
 import { SiteLink } from './SiteLink'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Check } from 'lucide-react'
-import { Silk } from './ui/Silk'
+import { DeferredSilk } from './DeferredSilk'
 
 const propertyImages = [
   { src: '/home-title-hero.webp', position: '54% center' },
@@ -11,15 +11,19 @@ const propertyImages = [
 
 export function Hero() {
   const [activeImage, setActiveImage] = useState(0)
+  const [carouselReady, setCarouselReady] = useState(false)
+  const [imageInView, setImageInView] = useState(false)
+  const visualRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    propertyImages.slice(1).forEach(({ src }) => {
-      const image = new Image()
-      image.decoding = 'async'
-      image.src = src
-    })
+    const observer = new IntersectionObserver(([entry]) => setImageInView(entry.isIntersecting))
+    if (visualRef.current) observer.observe(visualRef.current)
+    return () => observer.disconnect()
+  }, [])
 
+  useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const loadTimer = window.setTimeout(() => { if (imageInView && !reducedMotion.matches) setCarouselReady(true) }, 3500)
     let rotationTimer = 0
 
     const stopRotation = () => {
@@ -29,7 +33,7 @@ export function Hero() {
 
     const startRotation = () => {
       stopRotation()
-      if (document.hidden || reducedMotion.matches) return
+      if (document.hidden || reducedMotion.matches || !imageInView || !carouselReady) return
       rotationTimer = window.setInterval(() => {
         setActiveImage((current) => (current + 1) % propertyImages.length)
       }, 5800)
@@ -41,22 +45,17 @@ export function Hero() {
     startRotation()
 
     return () => {
+      window.clearTimeout(loadTimer)
       stopRotation()
       reducedMotion.removeEventListener('change', startRotation)
       document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [])
+  }, [imageInView, carouselReady])
 
   return (
     <section className="hero" id="top" aria-labelledby="hero-heading">
       <div className="hero-silk" aria-hidden="true">
-        <Silk
-          speed={3.2}
-          scale={1.15}
-          color="#1748e8"
-          noiseIntensity={0.85}
-          rotation={0.18}
-        />
+        <DeferredSilk />
       </div>
 
       <div className="container hero-grid">
@@ -84,24 +83,26 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="hero-visual">
+        <div className="hero-visual" ref={visualRef}>
           <figure className="property-visual">
             <div
               className="property-carousel"
               role="img"
               aria-label="American residential homes representing Invicto's title services"
             >
-              {propertyImages.map((image, index) => (
+              {propertyImages.filter((_, index) => index === 0 || carouselReady).map((image, index) => (
                 <img
                   className={index === activeImage ? 'is-active' : ''}
                   src={image.src}
+                  srcSet={`${image.src.replace('.webp', '-640.webp')} 640w, ${image.src.replace('.webp', '-960.webp')} 960w, ${image.src} 1400w`}
+                  sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1200px) 48vw, 620px"
                   alt=""
                   width="1400"
                   height="934"
                   decoding="async"
                   fetchPriority={index === 0 ? 'high' : 'low'}
                   style={{ objectPosition: image.position }}
-                  aria-hidden={index !== activeImage}
+                  aria-hidden="true"
                   key={image.src}
                 />
               ))}
