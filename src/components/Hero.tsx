@@ -94,8 +94,6 @@ export function Hero() {
                 <img
                   className={index === activeImage ? 'is-active' : ''}
                   src={image.src}
-                  srcSet={`${image.src.replace('.webp', '-640.webp')} 640w, ${image.src.replace('.webp', '-960.webp')} 960w, ${image.src} 1400w`}
-                  sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1200px) 48vw, 620px"
                   alt=""
                   width="1400"
                   height="934"

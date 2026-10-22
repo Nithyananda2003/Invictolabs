@@ -25,10 +25,9 @@ import { ProductHeroVisual } from './components/ProductHeroVisual'
 import { TaxFlowExperience } from './components/TaxFlowExperience'
 import { TitleFlowGallery } from './components/TitleFlowGallery'
 import './products-stack.css'
-const LazyTiltedCard = lazy(() => import('./components/ui/TiltedCard'))
-function TiltedCard(props: React.ComponentProps<typeof LazyTiltedCard>) {
-  return <Suspense fallback={<div className="product-tilt-shell">{props.children}</div>}><LazyTiltedCard {...props} /></Suspense>
-}
+// Keep the shells mounted before the scroll effect captures them. A lazy
+// fallback can be replaced after that effect runs, leaving detached targets.
+import TiltedCard from './components/ui/TiltedCard'
 
 const workflowStages = ['Order intake', 'Assignment', 'Production', 'Quality review', 'Invoice ready']
 
@@ -130,7 +129,7 @@ export default function ProductsPage({ product }: { product?: ProductName }) {
       window.removeEventListener('resize', requestUpdate)
       revealMedia.removeEventListener('change', requestUpdate)
     }
-  }, [])
+  }, [product])
 
   return (
     <>
